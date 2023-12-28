@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+        - name: Config git
+          run: |
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git fetch
+            git pull
+        - name: Git tag
+          run: |
+            export version=${{ github.event.inputs.version }}
+            git tag -a $version -m $version
+            git push origin --tags
+        - name: Create release
+          uses: actions/create-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            tag_name: ${{ github.event.inputs.version }}
+            release_name: Release ${{ github.event.inputs.version }}
+            draft: false
+            prerelease: false
