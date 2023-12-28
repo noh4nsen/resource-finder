@@ -5,6 +5,8 @@ on:
     inputs:
       version:
         required: true
+permissions:
+    contents: write
 
 jobs:
   release:
