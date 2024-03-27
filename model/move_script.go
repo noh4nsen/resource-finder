@@ -20,8 +20,14 @@ func (moveScript *Script) loadScriptBodyHeader(workspace string) {
 }
 
 func (moveScript *Script) LoadScriptBody(formattedTime, directory, workspace, referenceResource, resourceSuffix, moduleName, moduleResource string) {
-	moveScript.Body = moveScript.Body + fmt.Sprintf("terraform state mv --state-out '%s.%s.%s.migrated.tfstate' %s[\\\"%s\\\"] %s%s[\\\"%s\\\"]\n",
-		formattedTime, moveScript.Directory, moveScript.Name,
-		referenceResource, resourceSuffix,
-		moduleName, moduleResource, resourceSuffix)
+	if resourceSuffix == "GENERAL" {
+		moveScript.Body = moveScript.Body + fmt.Sprintf("terraform state mv --state-out '%s.%s.%s.migrated.tfstate' %s %s%s\n",
+			formattedTime, moveScript.Directory, moveScript.Name,
+			referenceResource, moduleName, moduleResource)
+	} else {
+		moveScript.Body = moveScript.Body + fmt.Sprintf("terraform state mv --state-out '%s.%s.%s.migrated.tfstate' %s[\\\"%s\\\"] %s%s[\\\"%s\\\"]\n",
+			formattedTime, moveScript.Directory, moveScript.Name,
+			referenceResource, resourceSuffix,
+			moduleName, moduleResource, resourceSuffix)
+	}
 }

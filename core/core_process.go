@@ -35,11 +35,9 @@ func processAllReferenceResources(reference model.ReferenceState, domain model.D
 }
 
 func proccessReferenceResources(domain model.DomainModule, moveScript *model.Script, referenceSuffix, time string, resources []string) {
-	if strings.Contains(referenceSuffix, domain.Name) {
-		for _, resource := range resources {
-			processDomainResources(domain, moveScript, resource, referenceSuffix, time)
-			processChildDomain(domain, moveScript, resource, referenceSuffix, time)
-		}
+	for _, resource := range resources {
+		processDomainResources(domain, moveScript, resource, referenceSuffix, time)
+		processChildDomain(domain, moveScript, resource, referenceSuffix, time)
 	}
 }
 
