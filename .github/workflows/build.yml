@@ -31,12 +31,12 @@ jobs:
             run: |
               git config --global user.name "noh4nsen"
               git config --global user.email "noh4nsen@gmail.com"
-              git fetch
-              git pull
           - name: Commit Artifacts
             env:
               OS: ${{ matrix.os }}
             run: |
+              git fetch
+              git pull
               git add .
               git commit -am "Chore: build workflow updated compiled binaries ${OS}"
               git push
