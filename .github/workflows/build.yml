@@ -26,7 +26,6 @@ jobs:
             env:
               OS: ${{ matrix.os }}
             run: |
-              cd ./resource-finder
               go build -o ./build/${OS}/resource-finder .
           - name: Config git
             run: |
