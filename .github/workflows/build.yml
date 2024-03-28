@@ -1,0 +1,43 @@
+name: "Build resource-finder tool"
+
+on:
+    workflow_dispatch:
+    push:
+        paths:
+            - '**/resource-finder/*.go'
+            - '**/resource-finder/go.mod'
+            - '**/resource-finder/go.sum'
+
+jobs:
+    build:
+      strategy:
+        matrix:
+          os: [ubuntu-latest, windows-latest, macos-latest]
+      runs-on: ${{ matrix.os }}
+      steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+          - name: Setup Go
+            uses: actions/setup-go@v4
+            with:
+              go-version: '1.21'
+          - run: go version
+          - name: Build
+            env:
+              OS: ${{ matrix.os }}
+            run: |
+              cd ./resource-finder
+              go build -o ./build/${OS}/resource-finder .
+          - name: Config git
+            run: |
+              git config --global user.name "noh4nsen"
+              git config --global user.email "noh4nsen@gmail.com"
+              git fetch
+              git pull
+          - name: Commit Artifacts
+            env:
+              OS: ${{ matrix.os }}
+            run: |
+              git add .
+              git commit -am "Chore: build workflow updated compiled binaries ${OS}"
+              git push
